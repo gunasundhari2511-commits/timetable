@@ -1,3 +1,29 @@
+// ── SUBJECT AUTOCOMPLETE ─────────────────────────────────
+var ALL_SUBJECTS = ["Abstract Algebra","Algebra & Calculus","American Literature","Analytical Geometry","Applied Physics-I","Applied Physics-II","Artificial Intelligence","Banking Theory","Business Accounting","Business Communication","Business Economics","Business Law","C Lab","C Programming","CLP","Classical Algebra","Commonwealth Lit","Communicative Skills","Company Law","Complex Analysis","Computer Application","Computer Network","Computer Practical","Corporate Accounting","Cost Accounting","DBMS","DBMS Lab","Differential Calculus","Differential Equations","Digital Electronics","Drama","Dynamics","EVS","English","English Language Teaching","English for BPO","English for Competitive Exam","Environmental Studies","Ethazhiyal","Fiction","Financial Management","Financial Services","Freedom Movement","Freedom Movement in India","Fundamentals of Algorithm","GST","Gender Studies","General Studies","Graph Theory","HRM","History of English Language","History of English Lit","History of English Lit-I","Ikkala Elakiyam","Ikkala Tamil Elakanam","Income Tax Law","India Arasiyalamaipu","Indian Constitution","Indian Lit in English","Information Technology","Integral Calculus","Introduction to Latex","Investment Management","Java","Java Lab","Kalvettiyal","Kappiyam","Language & Linguistics","Linear Algebra","Literary Criticism","Literary Forms","MATLAB Lab","Management Accounting","Management Concepts","Marketing","Mathematical Statistics","Mathipukalvi","Maths for Competitive Exams","Mobile App Development","Mozhipeyarpiyal","Mozhiyiyal","NME","Nambiyaga Porul","Nannul Sollathigaram","Nannul Yezhuthathigaram","Nattupura Elakkiyam","Neethi Elakkiyam","Number Theory","Numerical Analysis","Numerical Methods","Operating Systems","OR","Oppilikiyam","PHP","PHP Lab","Padaipilakiyam","Palina Samathuvam","Partnership Accounts","Physics","Physics Lab","Poetry-I","Poetry-II","Principles of Accountancy","Professional English","Professional English-I","Professional English-II","Prose","Python","Python Lab","Real Analysis","Samaya Elakkiyam","Sanga Elakkiyam","Sequence and Series","Shakespeare","Sitrilakiyam","Social History of England","Soft Skill","Soft Skill Development","Software Development","Statics","Statistics Practical","Sutrulaviyal","Sutrusuzhal Kalvi","Tamil","Tamil Elakkiya Varalaru","Tamil Elakkiya Varalaru-I","Tamil Elakkiya Varalaru-II","Tamilaga Kovilgal","Tamilaga Varalaru","Tamilum Ariviyalum","Thamizh Semmozhi Panbugal","Tools","Translation Theory","Value Education","Vector Calculus","Web Technology","World One-Act Plays","World Short Stories","Yappu-Thandi"];
+
+function filterSubjects(){
+  var val = document.getElementById('subSearchInput').value.trim().toLowerCase();
+  var dd = document.getElementById('subDropdown');
+  document.getElementById('searchOut').innerHTML='<div class="empty"><div class="ei">🔍</div><p>Subject select pannunga</p></div>';
+  if(val.length < 1){ dd.style.display='none'; return; }
+  var matches = ALL_SUBJECTS.filter(function(s){ 
+    var sl = s.toLowerCase();
+    // Match from start of subject name OR start of any word in subject
+    return sl.startsWith(val) || sl.split(' ').some(function(w){ return w.startsWith(val); });
+  });
+  if(matches.length===0){ dd.style.display='none'; return; }
+  dd.style.display='block';
+  dd.innerHTML = matches.map(function(s){
+    return '<div onclick="selectSubject(\''+s.replace(/'/g,"\\'")+'\') " style="padding:10px 16px;cursor:pointer;font-size:0.9rem;border-bottom:1px solid #f0f4ff;color:#1e3a6e;" onmouseover="this.style.background=\'#f0f4ff\'" onmouseout="this.style.background=\'white\'">'+s+'</div>';
+  }).join('');
+}
+
+function selectSubject(name){
+  document.getElementById('subSearchInput').value = name;
+  document.getElementById('subDropdown').style.display='none';
+  searchSubject();
+}
+
 // ── Build class timetable grid ───────────────────────────
 function buildClassGrid(dkey, semIdx, shift){
   const periodHeaders = PERIODS.map(p=>{
@@ -52,6 +78,10 @@ function showStaffTT(){
   DAYS.forEach(d=>PERIOD_COLS.forEach(p=>{ if(sch[d][p.label])total++; }));
 
   el.innerHTML='<div class="tt-wrap">'
+    +'<div style="display:flex;justify-content:flex-end;margin-bottom:8px">'
+    +'<button onclick="printSection(\'printArea\')" style="background:#0f2044;color:white;border:none;padding:9px 20px;border-radius:8px;cursor:pointer;font-size:0.88rem;font-family:DM Sans,sans-serif;font-weight:600;">🖨️ Print / Save PDF</button>'
+    +'</div>'
+    +'<div id="printArea">'
     +'<div class="tt-top" style="background:linear-gradient(135deg,#0f2044,#1e3a6e)">'
     +'<div class="tt-av" style="background:'+bg+'">'+init+'</div>'
     +'<div class="tt-ti"><h2>'+s.name+'</h2><p>'+s.role+' | '+s.dept+'</p></div>'
@@ -60,11 +90,10 @@ function showStaffTT(){
     +'<div class="ii"><span class="il">📞</span><span class="iv">'+s.phone+'</span></div>'
     +'<div class="ii"><span class="il">🏫 Dept:</span><span class="iv">'+s.dept+'</span></div>'
     +'<div class="ii"><span class="il">👤 Type:</span><span class="iv">'+(s.type==='permanent'?'Permanent':'Guest/PTA')+'</span></div>'
-    +'<div class="ii"><span class="il">🔄 Shift:</span><span class="iv">'+shift+'</span></div>'
     +'<div class="ii"><span class="il">📋 Periods:</span><span class="iv">'+total+' assigned</span></div>'
     +'</div>'
     +buildStaffGrid(sch)
-    +'</div>';
+    +'</div>'+'</div>';
 }
 
 // ── CLASS TIMETABLE ──────────────────────────────────────
@@ -103,6 +132,10 @@ function showClassTT(){
   const deptStaff = STAFF.filter(s=>DMAP[s.dept]===key);
 
   el.innerHTML='<div class="tt-wrap">'
+    +'<div style="display:flex;justify-content:flex-end;margin-bottom:8px">'
+    +'<button onclick="printSection(\'printArea2\')" style="background:#0f2044;color:white;border:none;padding:9px 20px;border-radius:8px;cursor:pointer;font-size:0.88rem;font-family:DM Sans,sans-serif;font-weight:600;">🖨️ Print / Save PDF</button>'
+    +'</div>'
+    +'<div id="printArea2">'
     +'<div class="tt-top" style="background:linear-gradient(135deg,#0f2044,#1e3a6e)">'
     +'<div class="tt-av" style="background:rgba(255,255,255,0.2);font-size:20px">'+syl.short[0]+'</div>'
     +'<div class="tt-ti">'
@@ -117,7 +150,7 @@ function showClassTT(){
     +'<div class="ii"><span class="il">👨‍🏫 Staff:</span><span class="iv">'+deptStaff.length+' members</span></div>'
     +'</div>'
     +buildClassGrid(key, parseInt(si), shift)
-    +'</div>';
+    +'</div>'+'</div>';
 }
 
 // ── SHIFT TAB SWITCH ─────────────────────────────────────
@@ -167,3 +200,132 @@ function showPage(id,btn){
 
 initDash();
 initContacts();
+
+// ── SUBJECT SEARCH ───────────────────────────────────────
+function searchSubject(){
+  const query = document.getElementById('subSearchInput').value.trim().toLowerCase();
+  const el = document.getElementById('searchOut');
+  if(query.length < 2){
+    el.innerHTML='<div class="empty"><div class="ei">🔍</div><p>Subject name type pannunga</p></div>';
+    return;
+  }
+
+  // Find all matching subject assignments
+  const results = [];
+  Object.keys(SYL).forEach(function(dkey){
+    [0,1,2,3,4,5].forEach(function(si){
+      ['Shift I','Shift II'].forEach(function(shift){
+        var subStaff = {};
+        DAYS.forEach(function(day){
+          PERIOD_COLS.forEach(function(p){
+            var key=dkey+'-'+si+'-'+shift+'-'+day+'-'+p.label;
+            var e=MASTER[key];
+            if(e && e.sub.toLowerCase()===query){
+              if(!subStaff[e.sub]) subStaff[e.sub]=e.fixedStaff||e.staffName;
+            }
+          });
+        });
+        Object.keys(subStaff).forEach(function(sub){
+          results.push({
+            sub: sub,
+            dept: SYL[dkey].name,
+            year: si<2?'I Year':si<4?'II Year':'III Year',
+            sem: SYL[dkey].semesters[si].sem,
+            shift: shift,
+            staff: subStaff[sub]
+          });
+        });
+      });
+    });
+  });
+
+  if(results.length===0){
+    el.innerHTML='<div class="empty"><div class="ei">❌</div><p>No subject found!</p></div>';
+    return;
+  }
+
+  // Group by subject name
+  var grouped = {};
+  results.forEach(function(r){
+    if(!grouped[r.sub]) grouped[r.sub]=[];
+    grouped[r.sub].push(r);
+  });
+
+  var html='<div style="display:grid;gap:16px;" id="searchPrintContent">';
+  Object.keys(grouped).forEach(function(sub){
+    html+='<div class="tt-wrap">'
+      +'<div class="tt-top" style="background:linear-gradient(135deg,#0f2044,#1e3a6e);padding:14px 20px;">'
+      +'<div class="tt-ti"><h2 style="font-size:1rem">'+sub+'</h2>'
+      +'<p>'+grouped[sub].length+' classes assigned</p></div>'
+      +'</div>'
+      +'<table class="ctab" style="width:100%"><thead><tr>'
+      +'<th>#</th><th>Department</th><th>Year</th><th>Semester</th><th>Shift</th><th>Staff</th>'
+      +'</tr></thead><tbody>';
+    grouped[sub].forEach(function(r,i){
+      var sName = r.staff==='—'?'<span style="color:#9ca3af">Not assigned</span>'
+        :'<strong>'+r.staff.replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.)\s*/,'')+'</strong>';
+      html+='<tr>'
+        +'<td>'+(i+1)+'</td>'
+        +'<td>'+r.dept+'</td>'
+        +'<td>'+r.year+'</td>'
+        +'<td>'+r.sem+'</td>'
+        +'<td><span class="dbadge" style="background:#dbeafe;color:#1e40af">'+r.shift+'</span></td>'
+        +'<td>'+sName+'</td>'
+        +'</tr>';
+    });
+    html+='</tbody></table></div>';
+  });
+  html+='</div>';
+  el.innerHTML='<div style="display:flex;justify-content:flex-end;margin-bottom:10px">'
+    +'<button class="print-btn" onclick="printSection(\'searchPrintContent\')" style="background:#0f2044;color:white;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:0.85rem">🖨️ Print / Save PDF</button>'
+    +'</div>'+html;
+}
+
+// ── PRINT FUNCTION ───────────────────────────────────────
+function printSection(id){
+  var content = document.getElementById(id).innerHTML;
+  var win = window.open('','_blank','width=900,height=700');
+  win.document.write('<html><head><title>GASC Jayankondam - Timetable</title>');
+  win.document.write('<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">');
+  win.document.write('<style>');
+  win.document.write('body{font-family:DM Sans,sans-serif;margin:0;padding:20px;background:white;color:#1e3a6e;}');
+  win.document.write('.print-header{text-align:center;margin-bottom:20px;padding-bottom:12px;border-bottom:3px solid #0f2044;}');
+  win.document.write('.print-header h1{font-size:1.2rem;color:#0f2044;margin:0 0 4px;}');
+  win.document.write('.print-header p{font-size:0.8rem;color:#6b7280;margin:0;}');
+  win.document.write('.tt-top{background:linear-gradient(135deg,#0f2044,#1e3a6e)!important;color:white;padding:16px 20px;border-radius:10px;display:flex;align-items:center;gap:14px;margin-bottom:12px;}');
+  win.document.write('.tt-av{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;color:white;flex-shrink:0;}');
+  win.document.write('.tt-ti h2{margin:0;font-size:1rem;color:white;} .tt-ti p{margin:0;font-size:0.8rem;color:rgba(255,255,255,0.8);}');
+  win.document.write('.istrip{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;background:#f0f4ff;padding:10px 14px;border-radius:8px;}');
+  win.document.write('.ii{display:flex;gap:6px;font-size:0.8rem;} .il{color:#6b7280;} .iv{color:#1e3a6e;font-weight:600;}');
+  win.document.write('table{width:100%;border-collapse:collapse;font-size:0.8rem;}');
+  win.document.write('th{background:#0f2044;color:white;padding:8px 10px;text-align:center;border:1px solid #1e3a6e;}');
+  win.document.write('td{padding:7px 10px;border:1px solid #dde3f0;text-align:center;vertical-align:middle;}');
+  win.document.write('.day-label{background:#f0f4ff;font-weight:700;color:#0f2044;text-align:left;}');
+  win.document.write('.break-cell{background:#fff8e1;} .break-hdr{background:#b45309!important;}');
+  win.document.write('.cell-sub{font-weight:700;color:#1e3a6e;font-size:0.78rem;}');
+  win.document.write('.cell-staff{color:#4b6fa8;font-size:0.72rem;}');
+  win.document.write('.tt-scroll{overflow:visible;}');
+  win.document.write('@page{margin:1cm;size:A4 landscape;} @media print{body{padding:10px;}}');
+  win.document.write('</style></head><body>');
+  win.document.write('<div class="print-header">');
+  win.document.write('<h1>Government Arts & Science College, Jayankondam</h1>');
+  win.document.write('<p>Timetable Management Portal | Mon–Sat | 10:00 AM – 3:20 PM</p>');
+  win.document.write('</div>');
+  win.document.write(content);
+  win.document.write('</body></html>');
+  win.document.close();
+  win.focus();
+  setTimeout(function(){ win.print(); }, 800);
+}
+
+// ── PRINT ────────────────────────────────────────────────
+function printTT(content){
+  var printDiv = document.getElementById('printArea');
+  if(!printDiv){
+    printDiv = document.createElement('div');
+    printDiv.id = 'printArea';
+    document.body.appendChild(printDiv);
+  }
+  printDiv.innerHTML = content;
+  window.print();
+}

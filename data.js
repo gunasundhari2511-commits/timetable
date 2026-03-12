@@ -34,7 +34,7 @@ const SYL = {
   cs:{name:"B.Sc Computer Science",short:"CS",color:{bg:"#dbeafe",text:"#1d4ed8",dark:"#1e40af"},
     semesters:[
       {sem:"Semester I",   subs:["Tamil","English","Algebra & Calculus","Numerical Analysis","C Programming","C Lab","Value Education"]},
-      {sem:"Semester II",  subs:["Tamil","English","Java","Java Lab","Operations Research","Numerical Analysis","Professional English-I","EVS"]},
+      {sem:"Semester II",  subs:["Tamil","English","Java","Java Lab","OR","Numerical Analysis","Professional English-I","EVS"]},
       {sem:"Semester III", subs:["Tamil","English","Python","Python Lab","Applied Physics-I","NME","Professional English-II"]},
       {sem:"Semester IV",  subs:["Tamil","English","NME","DBMS","DBMS Lab","Applied Physics-II"]},
       {sem:"Semester V",   subs:["Soft Skill Development","Fundamentals of Algorithm","Digital Electronics","Web Technology","Computer Network","Artificial Intelligence"]},

@@ -50,6 +50,7 @@
     <button class="nb active" onclick="showPage('dashboard',this)">🏠 Dashboard</button>
     <button class="nb" onclick="showPage('staff',this)">👨‍🏫 Staff Timetable</button>
     <button class="nb" onclick="showPage('class',this)">🏫 Class Timetable</button>
+    <button class="nb" onclick="showPage('search',this)">🔍 Subject Search</button>
     <button class="nb" onclick="showPage('contacts',this)">📞 Contacts</button>
   </div>
 </div>
@@ -62,6 +63,7 @@
     <h2>GASC Timetable Portal</h2>
     <p>Government Arts &amp; Science College, Jayankondam — Mon to Sat | 10:00 AM – 3:20 PM | Shift I &amp; Shift II</p>
   </div>
+
   <div class="sched-box">
     <div class="sched-item"><span class="sched-label">⏰ Timing:</span><span class="sched-val">10:00 AM – 3:20 PM</span></div>
     <div class="sched-item"><span class="sched-label">📅 Days:</span><span class="sched-val">Monday – Saturday</span></div>
@@ -76,6 +78,7 @@
       <span class="pl-item">P5: 2:45–3:20</span>
     </div>
   </div>
+
   <div class="stats" id="statsRow"></div>
   <div class="dash-grid">
     <div class="dc">
@@ -107,12 +110,9 @@
     <div class="sr">
       <div class="sg"><label>Department</label>
         <select class="bsel" id="stDept" onchange="populateStaffDrop()">
-          <option value="">Select Department</option>
-          <option>Computer Science</option>
-          <option>Mathematics</option>
-          <option>Commerce</option>
-          <option>English</option>
-          <option>Tamil</option>
+          <option value="">-- Department select --</option>
+          <option>Computer Science</option><option>Mathematics</option>
+          <option>Commerce</option><option>English</option><option>Tamil</option>
         </select>
       </div>
       <div class="sg"><label>Staff Name</label>
@@ -188,8 +188,24 @@
   </div>
 </div>
 
+
+<!-- SUBJECT SEARCH -->
+<div class="page" id="page-search">
+  <div class="sp">
+    <h3>🔍 Subject Search</h3>
+    <div class="sr">
+      <div class="sg" style="flex:2;position:relative">
+        <label>Subject Name</label>
+        <input type="text" class="bsel" id="subSearchInput" placeholder="Type subject name... e.g. English, Tamil, Java" oninput="filterSubjects()" autocomplete="off">
+        <div id="subDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:white;border:2px solid #e0e7ff;border-radius:10px;max-height:220px;overflow-y:auto;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,0.1)"></div>
+      </div>
+    </div>
+  </div>
+  <div id="searchOut"><div class="empty"><div class="ei">🔍</div><p>Subject name type pannunga</p></div></div>
 </div>
+
 </div>
+</div><!-- end mainApp -->
 <script src="data.js"></script>
 <script src="app1.js"></script>
 <script src="app2.js"></script>

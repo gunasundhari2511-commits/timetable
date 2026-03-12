@@ -141,3 +141,22 @@ body{font-family:'DM Sans',sans-serif;background:#eef2ff;color:var(--text);min-h
   .sr{flex-direction:column;}
   .vbtn{width:100%;}
 }
+@media print {
+  .header, .gold-bar, .nav, .sp { display:none !important; }
+  .page { display:block !important; }
+  .tt-wrap { box-shadow:none !important; border:1px solid #ccc; }
+  body { background:white !important; }
+  button { display:none !important; }
+}
+
+@media print {
+  body * { visibility: hidden; }
+  #printArea, #printArea * { visibility: visible; }
+  #printArea {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    background: white;
+  }
+  .print-btn { display: none !important; }
+}
